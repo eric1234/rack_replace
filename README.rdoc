@@ -1,0 +1,22 @@
+= Rack::Replace
+
+Rack middleware which will perform a find/replace on the response body.
+This is basically a re-implementation of the following Rails code:
+
+    after_filter {response.body.gsub 'foo', 'bar'}
+
+The advantage of this module over the above code is:
+
+* It will work in any rack-compatible environment.
+* It is streaming friendly as it operates on each chunk given to rack.
+
+= Usage
+
+    use Rack::Replace, 'foo', 'bar'
+    use Rack::Replace 'HOST' {|env, match| env['HTTP_HOST']}
+
+For more advanced uses see rack_image_size and rack_new_window.
+
+= Credit
+
+This gem was developed by Eric Anderson (http://pixelwareinc.com).

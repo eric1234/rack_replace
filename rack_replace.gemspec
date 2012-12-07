@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name        = "rack_replace"
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.authors     = ['Eric Anderson']
   s.email       = ['eric@pixelwareinc.com']
 

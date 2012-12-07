@@ -23,16 +23,28 @@ module Rack
     #     use Rack::Replace, 'hostname' do |env, match|
     #       env['HTTP_HOST']
     #     end
+    #
+    # You can optionally make the last argument a hash. If provided
+    # those are the options to Rack::Replace.
+    #
+    # The only current option is :content_type which defaults to
+    # 'text/html'. The content type of the response must match in
+    # order for the gsub to take place. 
     def initialize(app, *args, &blk)
       @app = app
       @args = args
       @blk = blk
+
+      @options = Hash === @args.last ? @args.pop : {}
+      @options[:content_type] ||= 'text/html'
     end
 
     # Rack call interface
     def call(env) # :nodoc:
       status, headers, content = *@app.call(env)
-      [status, headers, Response.new(content, env, *@args, &@blk)]
+      content = Response.new(content, env, *@args, &@blk) if
+        headers['Content-Type'] == @options[:content_type]
+      [status, headers, content]
     end
 
   end

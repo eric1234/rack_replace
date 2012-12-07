@@ -8,7 +8,7 @@ class ReplaceTest < Test::Unit::TestCase
   def server(&blk)
     app = Rack::Builder.new do
       instance_eval &blk
-      run proc {|env| [200, {}, ['Hello world']]}
+      run proc {|env| [200, {'Content-Type' => 'text/html'}, ['Hello world']]}
     end.to_app
     @mock = Rack::MockRequest.new app
   end
@@ -31,6 +31,14 @@ class ReplaceTest < Test::Unit::TestCase
   def test_env
     server {use(Rack::Replace, /world/) {|env, match| env['SERVER_NAME']}}
     assert_equal 'Hello example.org', @mock.get('/').body
+  end
+
+  def test_invalid_type
+    app = Rack::Builder.new do
+      use Rack::Replace, 'foo', 'bar'
+      run proc {|env| [200, {'Content-Type' => 'text/javascript'}, ['var foo']]}
+    end.to_app
+    assert_equal 'var foo', Rack::MockRequest.new(app).get('/').body
   end
 
 end

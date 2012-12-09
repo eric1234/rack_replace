@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rack_replace (0.0.2)
+    rack_replace (0.0.3)
       rack
 
 GEM

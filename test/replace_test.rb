@@ -8,7 +8,7 @@ class ReplaceTest < Test::Unit::TestCase
   def server(&blk)
     app = Rack::Builder.new do
       instance_eval &blk
-      run proc {|env| [200, {'Content-Type' => 'text/html'}, ['Hello world']]}
+      run proc {|env| [200, {'Content-Type' => 'text/html; charset=utf8'}, ['Hello world']]}
     end.to_app
     @mock = Rack::MockRequest.new app
   end
@@ -39,6 +39,14 @@ class ReplaceTest < Test::Unit::TestCase
       run proc {|env| [200, {'Content-Type' => 'text/javascript'}, ['var foo']]}
     end.to_app
     assert_equal 'var foo', Rack::MockRequest.new(app).get('/').body
+  end
+
+  def test_missing_content_type
+    app = Rack::Builder.new do
+      use Rack::Replace, 'not', ''
+      run proc {|env| [304, {}, ['not modified']]}
+    end.to_app
+    assert_equal 'not modified', Rack::MockRequest.new(app).get('/').body
   end
 
 end

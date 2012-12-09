@@ -30,7 +30,7 @@ module Rack
     # The only current option is :content_type which defaults to
     # 'text/html'. The content type of the response must match in
     # order for the gsub to take place. 
-    def initialize(app, *args, &blk)
+    def initialize app, *args, &blk
       @app = app
       @args = args
       @blk = blk
@@ -40,10 +40,11 @@ module Rack
     end
 
     # Rack call interface
-    def call(env) # :nodoc:
+    def call env # :nodoc:
       status, headers, content = *@app.call(env)
       content = Response.new(content, env, *@args, &@blk) if
-        headers['Content-Type'] == @options[:content_type]
+        headers['Content-Type'] &&
+        headers['Content-Type'].start_with?(@options[:content_type])
       [status, headers, content]
     end
 

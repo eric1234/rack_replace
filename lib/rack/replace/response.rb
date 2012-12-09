@@ -3,7 +3,7 @@
 class Rack::Replace::Response
 
   # Wrap the content
-  def initialize(content, env, *args, &blk) # :nodoc:
+  def initialize content, env, *args, &blk # :nodoc:
     @content = content
     @env = env
     @args = args
@@ -25,7 +25,7 @@ class Rack::Replace::Response
   private
 
   # Actually apply the gsub expression
-  def apply(chunk)
+  def apply chunk
     chunk.gsub *@args do |*args|
       @blk.call @env, *args
     end

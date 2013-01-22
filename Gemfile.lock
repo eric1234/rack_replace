@@ -1,14 +1,14 @@
 PATH
   remote: .
   specs:
-    rack_replace (0.0.3)
+    rack_replace (0.0.4)
       rack
 
 GEM
   remote: http://rubygems.org/
   specs:
-    rack (1.4.1)
-    rake (10.0.2)
+    rack (1.5.0)
+    rake (10.0.3)
 
 PLATFORMS
   ruby

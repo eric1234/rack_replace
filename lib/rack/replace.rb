@@ -42,6 +42,7 @@ module Rack
     # Rack call interface
     def call env # :nodoc:
       status, headers, content = *@app.call(env)
+      headers.delete 'Content-Length'
       content = Response.new(content, env, *@args, &@blk) if
         headers['Content-Type'] &&
         headers['Content-Type'].start_with?(@options[:content_type])
